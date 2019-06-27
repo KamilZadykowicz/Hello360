@@ -1,22 +1,53 @@
 import React from 'react';
 import {
   AppRegistry,
+  asset,
+  Environment,
   StyleSheet,
   Text,
   View,
+  VrButton,
 } from 'react-360';
 
 export default class Hello360 extends React.Component {
+
+  state = {
+    city: [{name: "WENECJI", img: "360_v.jpeg"}, {name: "CHICAGO", img: "360_city.jpg"}],
+    cityVenice: true,
+  }
+
+  goTo = () => {
+    this.setState(prevState => ({
+      cityVenice: !prevState.cityVenice
+    }),
+    () =>
+      {this.state.cityVenice ?
+        Environment.setBackgroundImage(
+          asset('360_v.jpeg'),
+          {format: '2D'}, /* one of the formats mentioned above */
+        )
+        :
+        Environment.setBackgroundImage(
+          asset('360_city.jpg'),
+          {format: '2D'}, /* one of the formats mentioned above */
+        );
+    }
+    );
+  }
   render() {
     return (
       <View style={styles.panel}>
         <View style={styles.greetingBox}>
           <Text style={styles.greeting}>
-            SIEMA PATRYK !
+            WITAJ W {this.state.cityVenice ? this.state.city[0].name : this.state.city[1].name} !
           </Text>
-          <Text style={styles.greeting}>
-            MASZ POMYSŁ NA GRAFIKĘ 3D?
-          </Text>
+        </View>
+        <View style={styles.greetingBox}>
+          <VrButton onClick={this.goTo}>
+            <Text>
+              Przenieś się do {this.state.cityVenice ? this.state.city[1].name : this.state.city[0].name}
+            </Text>
+          </VrButton>
         </View>
       </View>
     );
@@ -26,11 +57,16 @@ export default class Hello360 extends React.Component {
 const styles = StyleSheet.create({
   panel: {
     // Fill the entire surface
-    width: 1000,
-    height: 600,
+    // width: 400,
+    // height: 200,
     backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    flex: 1,
+    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
+    padding: 20,
   },
   greetingBox: {
     padding: 20,
